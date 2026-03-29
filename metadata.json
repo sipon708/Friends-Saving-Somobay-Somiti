@@ -1,0 +1,9 @@
+{
+  "name": "ফ্রেন্ডস সেভিং সমবায় সমিতি ",
+  "description": "একটি পূর্ণাঙ্গ সমবায় সমিতি ব্যবস্থাপনা অ্যাপ্লিকেশন।",
+  "requestFramePermissions": [
+    "camera",
+    "microphone",
+    "geolocation"
+  ]
+}

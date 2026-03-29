@@ -1,0 +1,6 @@
+{
+  "appId": "com.samity.app",
+  "appName": "SamityApp",
+  "webDir": "dist",
+  "bundledWebRuntime": false
+}

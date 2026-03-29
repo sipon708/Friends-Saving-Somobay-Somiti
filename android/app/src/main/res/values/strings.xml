@@ -1,0 +1,7 @@
+<?xml version='1.0' encoding='utf-8'?>
+<resources>
+    <string name="app_name">ফ্রেন্ডস সেভিং সমবায় সমিতি</string>
+    <string name="title_activity_main">ফ্রেন্ডস সেভিং সমবায় সমিতি</string>
+    <string name="package_name">com.friendssaving.app</string>
+    <string name="custom_url_scheme">com.friendssaving.app</string>
+</resources>
