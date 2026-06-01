@@ -779,7 +779,7 @@ function MemberPortalPage({ onBack, members, borrowers, subscriptions, payments,
     if (memberType === 'borrower' && paymentType === 'loan_profit' && loanStatus && !paymentAmount) {
       setPaymentAmount(loanStatus.monthlyProfit.toString());
     }
-  }, [subStatus, paymentAmount, paymentType, memberType, loanStatus]);
+  }, [subStatus?.status, subStatus?.amount, paymentAmount, paymentType, memberType, loanStatus?.monthlyProfit]);
 
   const handleSubmitPayment = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -1921,7 +1921,7 @@ export default function App() {
   useEffect(() => {
     const day = dbSettings.find(s => s.key === 'meeting_day')?.value || 1;
     setMeetingDay(Number(day));
-  }, [dbSettings]);
+  }, [JSON.stringify(dbSettings)]);
 
   const isTransactionAllowed = () => {
     const now = new Date();
@@ -6680,7 +6680,7 @@ function PortalAccountsModal({ onClose, members, borrowers }: any) {
     });
 
     setLocalAccs(Array.from(merged.values()));
-  }, [members, borrowers, savedCredsMap]);
+  }, [members, borrowers, JSON.stringify(savedCredsMap)]);
 
   const handleSaveAll = async () => {
     setIsSaving(true);
