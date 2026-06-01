@@ -2396,7 +2396,7 @@ export default function App() {
       </AnimatePresence>
 
       <AnimatePresence>
-        {!showSplash && showPinModal && (
+        {!showSplash && showPinModal && currentPage !== 'member_portal' && (
           <motion.div 
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
@@ -2457,6 +2457,16 @@ export default function App() {
                 className="w-full bg-primary-600 text-white py-4 rounded-2xl font-bold text-lg hover:bg-primary-700 transition-colors mb-4 shadow-lg shadow-primary-200"
               >
                 Login
+              </button>
+
+              <button 
+                onClick={() => {
+                  setLoginError('');
+                  navigateTo('member_portal');
+                }}
+                className="w-full bg-indigo-50 dark:bg-slate-700 hover:bg-indigo-100 dark:hover:bg-slate-600 text-indigo-600 dark:text-indigo-300 py-4 rounded-xl font-bold text-sm transition-all flex items-center justify-center gap-2 border border-indigo-100 dark:border-slate-600 mb-6"
+              >
+                <Users className="w-4 h-4 text-indigo-500" /> সদস্য পোর্টাল লগইন
               </button>
 
               <button 
@@ -7413,6 +7423,17 @@ function SettingsPage({ onBack, goHome, themeConfig, setThemeConfig, logTransact
             <span className="font-medium text-slate-700 dark:text-slate-200">ঋণদাতার তথ্য পরিবর্তন</span>
           </div>
           <ChevronRight className="w-5 h-5 text-slate-300 dark:text-slate-600" />
+        </button>
+
+        <button 
+          onClick={() => setShowPortalAccounts(true)}
+          className="w-full p-4 border-b border-slate-50 dark:border-slate-700 flex items-center justify-between hover:bg-indigo-50/30 dark:hover:bg-indigo-950/25 bg-indigo-50/10 dark:bg-indigo-950/10 transition-colors"
+        >
+          <div className="flex items-center gap-3">
+            <ShieldCheck className="w-5 h-5 text-indigo-500" />
+            <span className="font-bold text-indigo-600 dark:text-indigo-400">সদস্য পোর্টাল অ্যাকাউন্টস সেটিংস</span>
+          </div>
+          <ChevronRight className="w-5 h-5 text-indigo-300 dark:text-indigo-800" />
         </button>
 
         <div className="p-4 border-b border-slate-50 dark:border-slate-700">
