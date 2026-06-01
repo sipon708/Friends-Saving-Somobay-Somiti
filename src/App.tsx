@@ -674,6 +674,7 @@ function MemberPortalPage({ onBack, members, borrowers, subscriptions, payments,
 }) {
   const [selectedId, setSelectedId] = useState<string | null>(localStorage.getItem('portal_user_id'));
   const [memberType, setMemberType] = useState<'samity' | 'borrower' | 'installment' | null>(localStorage.getItem('portal_user_type') as any);
+  const [showPassbook, setShowPassbook] = useState(false);
   
   const handleLoginSuccess = (id: string, type: 'samity' | 'borrower') => {
     setSelectedId(id);
@@ -946,7 +947,17 @@ function MemberPortalPage({ onBack, members, borrowers, subscriptions, payments,
           )}
 
           <div className="mb-8 mt-6">
-            <h3 className="text-slate-400 dark:text-slate-500 text-[10px] font-bold uppercase tracking-widest mb-3 ml-2 flex items-center gap-2"><Calculator className="w-3 h-3" /> পূর্ণ হিসাব বিবরণী</h3>
+            <div className="flex justify-between items-center mb-3">
+              <h3 className="text-slate-400 dark:text-slate-500 text-[10px] font-bold uppercase tracking-widest ml-2 flex items-center gap-2">
+                <Calculator className="w-3" /> পূর্ণ হিসাব বিবরণী
+              </h3>
+              <button 
+                onClick={() => setShowPassbook(true)}
+                className="text-xs font-black bg-emerald-50 dark:bg-emerald-950/40 text-emerald-600 dark:text-emerald-400 px-4 py-2 rounded-full border border-emerald-100 dark:border-emerald-900/30 flex items-center gap-1.5 hover:scale-105 active:scale-95 transition-all shadow-sm"
+              >
+                <BookOpen className="w-3.5 h-3.5" /> ডিজিটাল পাশবই
+              </button>
+            </div>
             
             {memberType === 'borrower' ? (
               <>
@@ -1097,6 +1108,12 @@ function MemberPortalPage({ onBack, members, borrowers, subscriptions, payments,
              ))}
           </div>
        </div>
+       {showPassbook && (
+         <DigitalPassbookModal 
+           member={selectedMember ? selectedMember : { ...selectedBorrower, id: selectedId }} 
+           onClose={() => setShowPassbook(false)} 
+         />
+       )}
     </div>
   );
 }
