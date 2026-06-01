@@ -25,6 +25,19 @@ export class ErrorBoundary extends Component<Props, State> {
 
   public render() {
     if (this.state.hasError) {
+      let errorMessage = this.state.error?.message || 'Unknown error';
+      let isFirestoreError = false;
+      
+      try {
+        const parsed = JSON.parse(errorMessage);
+        if (parsed && parsed.operationType) {
+          isFirestoreError = true;
+          errorMessage = `Firestore Error: ${parsed.error} (Operation: ${parsed.operationType}, Path: ${parsed.path})`;
+        }
+      } catch (e) {
+        // Not a JSON error
+      }
+
       return (
         <div className="h-full bg-slate-50 flex items-center justify-center p-4">
           <div className="bg-white p-8 rounded-3xl shadow-xl max-w-md w-full text-center">
@@ -35,10 +48,12 @@ export class ErrorBoundary extends Component<Props, State> {
             </div>
             <h1 className="text-2xl font-bold text-slate-900 mb-2">দুঃখিত, একটি সমস্যা হয়েছে!</h1>
             <p className="text-slate-500 mb-6">
-              অ্যাপ্লিকেশনে একটি অপ্রত্যাশিত ত্রুটি ঘটেছে। দয়া করে পেজটি রিফ্রেশ করুন।
+              {isFirestoreError 
+                ? "ডাটাবেসের সাথে যোগাযোগ করতে সমস্যা হয়েছে। আপনার পারমিশন বা ইন্টারনেট কানেকশন চেক করুন।"
+                : "অ্যাপ্লিকেশনে একটি অপ্রত্যাশিত ত্রুটি ঘটেছে। দয়া করে পেজটি রিফ্রেশ করুন।"}
             </p>
             <div className="bg-slate-100 p-4 rounded-xl text-left overflow-auto max-h-40 mb-6 text-xs text-slate-700 font-mono">
-              {this.state.error?.message || 'Unknown error'}
+              {errorMessage}
             </div>
             <button
               onClick={() => window.location.reload()}

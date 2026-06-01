@@ -11,6 +11,7 @@ export default defineConfig(({ mode }) => {
     build: {
       target: 'es2020'
     },
+    base: './',
     plugins: [
       react(),
       tailwindcss(),

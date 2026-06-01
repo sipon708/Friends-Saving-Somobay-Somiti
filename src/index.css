@@ -1,26 +1,81 @@
 @import "tailwindcss";
 
+@custom-variant dark (.dark &);
+
 @theme {
   --font-sans: "Inter", "Noto Sans Bengali", ui-sans-serif, system-ui, sans-serif;
+  
+  --color-primary-50: #f0f6fa;
+  --color-primary-100: #dceaf4;
+  --color-primary-200: #b8d4e9;
+  --color-primary-300: #88b7da;
+  --color-primary-400: #5294c7;
+  --color-primary-500: #3378b0;
+  --color-primary-600: #074173;
+  --color-primary-700: #05335a;
+  --color-primary-800: #042442;
+  --color-primary-900: #183350;
+  --color-primary-950: #102238;
+
+  --color-secondary: #3b82f6;
+  --color-accent: #f59e0b;
+  --color-danger: #ef4444;
 }
 
 @layer base {
+  :root {
+    --bg-main: #f8fafc;
+    --text-main: #0f172a;
+    --card-bg: #ffffff;
+    --card-border: #f1f5f9;
+  }
+
+  .dark {
+    --bg-main: #0f172a;
+    --text-main: #f8fafc;
+    --card-bg: #1e293b;
+    --card-border: #334155;
+  }
+
   html, body {
     height: 100%;
     width: 100%;
     margin: 0;
     padding: 0;
     overflow: hidden;
-    background-color: #f8fafc; /* Match bg-slate-50 */
+    background-color: var(--bg-main);
+    color: var(--text-main);
     overscroll-behavior: none;
     background-attachment: fixed;
+    transition: background-color 0.3s ease, color 0.3s ease;
   }
 
   body {
-    @apply bg-slate-50 text-slate-900 antialiased;
+    @apply antialiased;
     -webkit-tap-highlight-color: transparent;
-    background-color: #f8fafc;
-    background-attachment: fixed;
+  }
+
+  /* Global 3D Button styles applied to all standard buttons, excluding nav specific ones we already styled heavily */
+  button:not(.group):not(.relative) {
+    transition: transform 0.15s ease-out, box-shadow 0.15s ease-out !important;
+  }
+  
+  button:not(.group):not(.relative):not(:disabled):active {
+    transform: translateY(4px) scale(0.96) !important;
+  }
+  
+  /* Apply a generic bottom border drop-shadow for existing buttons to look physical */
+  button[class*="bg-"]:not(.group):not(.relative):not([class*="bg-transparent"]):not(.p-2):not(.rounded-full):not([class*="border-[0px]"]) {
+    border-bottom: 4px solid rgba(0, 0, 0, 0.15);
+  }
+
+  .dark button[class*="bg-"]:not(.group):not(.relative):not([class*="bg-transparent"]):not(.p-2):not(.rounded-full):not([class*="border-[0px]"]) {
+    border-bottom: 4px solid rgba(0, 0, 0, 0.4);
+  }
+
+  button[class*="bg-"]:not(.group):not(.relative):not([class*="bg-transparent"]):not(.p-2):not(.rounded-full):not(:disabled):active {
+    border-bottom-width: 0px !important;
+    margin-top: 4px !important; /* compensate for border loss to keep layout stable */
   }
 
   #root {
@@ -29,9 +84,53 @@
     overflow-y: auto;
     overflow-x: hidden;
     -webkit-overflow-scrolling: touch;
+    overscroll-behavior-y: none;
     padding-top: env(safe-area-inset-top);
     padding-bottom: env(safe-area-inset-bottom);
   }
+
+  /* Make all image logos/photos look 3D */
+  img {
+    filter: drop-shadow(0 4px 6px rgba(0, 0, 0, 0.15)) drop-shadow(0 2px 4px rgba(0, 0, 0, 0.12));
+    transition: transform 0.2s ease-out, filter 0.2s ease-out;
+  }
+  
+  img:hover {
+    transform: translateY(-2px) scale(1.02);
+    filter: drop-shadow(0 8px 12px rgba(0, 0, 0, 0.2)) drop-shadow(0 4px 6px rgba(0, 0, 0, 0.15));
+  }
+  
+  .dark img {
+    filter: drop-shadow(0 4px 6px rgba(0, 0, 0, 0.4)) drop-shadow(0 2px 4px rgba(0, 0, 0, 0.3));
+  }
+  
+  .dark img:hover {
+    filter: drop-shadow(0 8px 12px rgba(0, 0, 0, 0.5)) drop-shadow(0 4px 6px rgba(0, 0, 0, 0.4));
+  }
+
+  /* Make all Icons (SVGs) look 3D */
+  svg:not(.recharts-surface) {
+    filter: drop-shadow(0 2px 3px rgba(0, 0, 0, 0.15));
+    transition: transform 0.2s ease, filter 0.2s ease;
+  }
+  
+  button:hover svg:not(.recharts-surface) {
+    filter: drop-shadow(0 4px 6px rgba(0, 0, 0, 0.25));
+    transform: scale(1.05);
+  }
+  
+  .dark svg:not(.recharts-surface) {
+    filter: drop-shadow(0 2px 4px rgba(0, 0, 0, 0.5));
+  }
+}
+
+@keyframes snake-rotate {
+  from { transform: rotate(0deg); }
+  to { transform: rotate(360deg); }
+}
+
+.animate-snake {
+  animation: snake-rotate 3s linear infinite;
 }
 
 .marquee {
