@@ -134,15 +134,22 @@ export interface PendingPayment {
   notes?: string;
 }
 
-const isAuthorized = () => {
-  return localStorage.getItem('isLoggedIn') === 'true' || !!localStorage.getItem('member_session');
+const isAuthorized = (tableName?: string) => {
+  if (localStorage.getItem('isLoggedIn') === 'true' || !!localStorage.getItem('member_session') || !!localStorage.getItem('portal_user_id')) {
+    return true;
+  }
+  // Allow fetching members, borrowers, and settings for portal login and basic info setup
+  if (tableName === 'members' || tableName === 'borrowers' || tableName === 'settings') {
+    return true;
+  }
+  return false;
 };
 
 const createTableProxy = <T = any>(tableName: string) => {
   return {
     toArray: async (): Promise<(T & { id: string })[]> => {
       // Allow fetching if authorized
-      if (!isAuthorized()) return [];
+      if (!isAuthorized(tableName)) return [];
       try {
         const { data, error } = await (supabase as any)
           .from(tableName)
@@ -159,7 +166,7 @@ const createTableProxy = <T = any>(tableName: string) => {
     add: async (data: any) => {
       // Members can add to pendingPayments and portalMessages
       const canMemberAdd = tableName === 'pendingPayments' || tableName === 'portalMessages';
-      if (!isAuthorized() && !canMemberAdd) return null;
+      if (!isAuthorized(tableName) && !canMemberAdd) return null;
       try {
         const { data: result, error } = await (supabase as any)
           .from(tableName)
@@ -177,7 +184,7 @@ const createTableProxy = <T = any>(tableName: string) => {
       }
     },
     put: async (data: any) => {
-      if (!isAuthorized()) return null;
+      if (!isAuthorized(tableName)) return null;
       try {
         const { data: result, error } = await (supabase as any)
           .from(tableName)
@@ -195,7 +202,7 @@ const createTableProxy = <T = any>(tableName: string) => {
       }
     },
     update: async (id: any, data: any) => {
-      if (!isAuthorized()) return false;
+      if (!isAuthorized(tableName)) return false;
       try {
         const { error } = await (supabase as any)
           .from(tableName)
@@ -211,7 +218,7 @@ const createTableProxy = <T = any>(tableName: string) => {
       }
     },
     delete: async (id: any) => {
-      if (!isAuthorized()) return false;
+      if (!isAuthorized(tableName)) return false;
       try {
         const { error } = await (supabase as any)
           .from(tableName)
@@ -227,7 +234,7 @@ const createTableProxy = <T = any>(tableName: string) => {
       }
     },
     get: async (id: any) => {
-      if (!isAuthorized()) return undefined;
+      if (!isAuthorized(tableName)) return undefined;
       try {
         const { data, error } = await (supabase as any)
           .from(tableName)
@@ -244,7 +251,7 @@ const createTableProxy = <T = any>(tableName: string) => {
     where: (clause: any) => {
       const q: any = {
         toArray: async (): Promise<(T & { id: string })[]> => {
-          if (!isAuthorized()) return [];
+          if (!isAuthorized(tableName)) return [];
           if (typeof clause === 'object') {
             const query = (supabase as any).from(tableName).select('*');
             Object.entries(clause).forEach(([k, v]) => {
@@ -368,7 +375,7 @@ export const db = {
   portalMessages: createTableProxy<PortalMessage>('portalMessages'),
   settings: {
     toArray: async () => {
-      if (!isAuthorized()) return [];
+      if (!isAuthorized('settings')) return [];
       try {
         const { data, error } = await (supabase as any)
           .from('settings')
